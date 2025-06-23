@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LessonServiceImpl extends LessonService {
+public class LessonServiceImpl implements LessonService {
 
     @Autowired
     private LessonRepository lessonRepository;
@@ -17,6 +17,11 @@ public class LessonServiceImpl extends LessonService {
     @Override
     public List<Lesson> findAll() {
         return lessonRepository.findAll();
+    }
+
+    @Override
+    public Optional<Lesson> findById(Integer id) {
+        return lessonRepository.findById(id);
     }
 
     @Override
@@ -30,13 +35,12 @@ public class LessonServiceImpl extends LessonService {
     }
 
     @Override
-    public int findMaxOrderByCourseId(Integer courseId) {
-        return lessonRepository.findMaxOrderByCourseId(courseId)
-                .orElse(0); // Trả về 0 nếu không tìm thấy giá trị max
+    public Optional<Integer> findMaxOrderByCourseId(Integer courseId) {
+        return lessonRepository.findMaxOrderByCourseId(courseId);
     }
 
     @Override
-    public Optional<Lesson> findById(Integer id) {
-        return lessonRepository.findById(id); // Gọi trực tiếp từ repository
+    public List<Lesson> findAllWithCourse() {
+        return lessonRepository.findAllWithCourse();
     }
 }

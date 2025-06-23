@@ -228,19 +228,19 @@ public class HomeController {
     }
 
     @PostMapping("/admin/add-managelessons")
-    public String addManageLessons(@RequestParam("courseId") Integer courseId,
+    public String addManageLessons(@RequestParam(value = "courseId", required = false) Integer courseId,
                                    @RequestParam("title") String title,
                                    @RequestParam("content") String content,
                                    @RequestParam(value = "video", required = false) MultipartFile video,
                                    @RequestParam(value = "material", required = false) MultipartFile material,
                                    RedirectAttributes redirectAttributes) throws IOException {
         if (courseId == null || title == null || title.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Khóa học và tiêu đề bài học không được để trống!");
+            redirectAttributes.addFlashAttribute("error", "Vui lòng chọn khóa học và nhập tiêu đề bài học!");
             return "redirect:/admin/managelessons";
         }
         Optional<Course> courseOptional = courseService.findById(courseId);
         if (courseOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Khóa học không tồn tại!");
+            redirectAttributes.addFlashAttribute("error", "Khóa học không tồn tại! Vui lòng chọn khóa học hợp lệ.");
             return "redirect:/admin/managelessons";
         }
 
@@ -285,7 +285,7 @@ public class HomeController {
             Files.copy(material.getInputStream(), materialPath);
             lesson.setMaterialUrl(fileName);
         } else {
-            redirectAttributes.addFlashAttribute("error", "Tệp tài liệu không được bỏ trống!");
+            redirectAttributes.addFlashAttribute("error", "Vui lòng tải lên tài liệu PDF!");
             return "redirect:/admin/managelessons";
         }
 
@@ -294,6 +294,7 @@ public class HomeController {
             redirectAttributes.addFlashAttribute("message", "Thêm bài học thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lỗi khi thêm bài học: " + e.getMessage());
+            logger.error("Lỗi khi lưu bài học: ", e);
         }
         return "redirect:/admin/managelessons";
     }

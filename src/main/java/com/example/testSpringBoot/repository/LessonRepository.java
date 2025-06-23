@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
+
     @Query("SELECT MAX(l.lessonOrder) FROM Lesson l WHERE l.courseId = :courseId")
     Optional<Integer> findMaxOrderByCourseId(Integer courseId);
 

@@ -1,40 +1,21 @@
 package com.example.testSpringBoot.service;
 
 import com.example.testSpringBoot.model.Lesson;
-import com.example.testSpringBoot.repository.LessonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class LessonService {
+public interface LessonService {
 
-    @Autowired
-    private LessonRepository lessonRepository;
+    List<Lesson> findAll();
 
-    public List<Lesson> findAll() {
-        return lessonRepository.findAll();
-    }
+    Optional<Lesson> findById(Integer id);
 
-    public Optional<Lesson> findById(Integer id) {
-        return lessonRepository.findById(id);
-    }
+    void save(Lesson lesson);
 
-    public void save(Lesson lesson) {
-        lessonRepository.save(lesson);
-    }
+    void deleteById(Integer id);
 
-    public void deleteById(Integer id) {
-        lessonRepository.deleteById(id);
-    }
+    Optional<Integer> findMaxOrderByCourseId(Integer courseId);
 
-    public Optional<Integer> findMaxOrderByCourseId(Integer courseId) {
-        return lessonRepository.findMaxOrderByCourseId(courseId);
-    }
-
-    public List<Lesson> findAllWithCourse() {
-        return lessonRepository.findAllWithCourse();
-    }
+    List<Lesson> findAllWithCourse();
 }
