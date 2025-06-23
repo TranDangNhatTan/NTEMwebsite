@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User List</title>
+</head>
+<body>
+<h1>Danh sách người dùng</h1>
+<div th:if="${not #lists.isEmpty(users)}">
+  <ul>
+    <li th:each="user : ${users}" th:text="${user.username} + ' - ' + ${user.role}"></li>
+  </ul>
+</div>
+<div th:unless="${not #lists.isEmpty(users)}">
+  <p>Không có người dùng nào.</p>
+</div>
+</body>
+</html><!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User List</title>
+</head>
+<body>
+<h1>Danh sách người dùng</h1>
+<div th:if="${not #lists.isEmpty(users)}">
+  <ul>
+    <li th:each="user : ${users}" th:text="${user.username} + ' - ' + ${user.role}"></li>
+  </ul>
+</div>
+<div th:unless="${not #lists.isEmpty(users)}">
+  <p>Không có người dùng nào.</p>
+</div>
+</body>
+</html>

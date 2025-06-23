@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="sidebar">
+    <a href="/managecourses">Manage Courses</a>
+    <a href="/managelessons">Manage Lessons</a>
+    <a href="/manageenrollments">Manage Enrollments</a>
+    <a href="/manageresources">Manage Resources</a>
+</div>
+
+<div class="main-content">
+    <h2>Manage Lessons</h2>
+
+    <div th:if="${error != null}" class="alert alert-danger">
+        <span th:text="${error}"></span>
+    </div>
+
+    <div class="add-lesson-form">
+        <h3>Add New Lesson</h3>
+        <form th:action="@{/addLesson}" th:object="${lesson}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="courseId">Select Course</label>
+                <select th:field="*{courseId}" id="courseId" name="courseId" required>
+                    <option value="">Select a course</option>
+                    <option th:each="course : ${courses}" th:value="${course.courseId}" th:text="${course.title}"></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="title">Lesson Title</label>
+                <input type="text" th:field="*{title}" id="title" name="title" required />
+            </div>
+
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea th:field="*{content}" id="content" name="content"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="video">Upload Video</label>
+                <input type="file" id="video" name="video" accept="video/*" />
+            </div>
+
+            <div class="form-group">
+                <label for="material">Upload Document</label>
+                <input type="file" id="material" name="material" accept=".pdf,.doc,.docx" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit">Add Lesson</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="existing-lessons">
+        <h3>Existing Lessons</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Course</th>
+                <th>Video</th>
+                <th>Document</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="lesson : ${lessons}">
+                <td th:text="${lesson.title}"></td>
+                <td th:text="${lesson.course.title}"></td>
+                <td th:if="${lesson.videoUrl != null}">
+                    <a th:href="${lesson.videoUrl}" target="_blank">View Video</a>
+                </td>
+                <td th:if="${lesson.videoUrl == null}">
+                    <span>No video</span>
+                </td>
+                <td th:if="${lesson.materialUrl != null}">
+                    <a th:href="${lesson.materialUrl}" target="_blank">View Document</a>
+                </td>
+                <td th:if="${lesson.materialUrl == null}">
+                    <span>No document</span>
+                </td>
+                <td>
+                    <a th:href="@{/deleteLesson(id=${lesson.lessonId})}" onclick="return confirm('Are you sure you want to delete this lesson?')">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

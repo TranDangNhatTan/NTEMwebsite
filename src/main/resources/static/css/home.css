@@ -1,0 +1,373 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: url('/images/bg_register.png') no-repeat center center fixed;
+    background-size: cover;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/images/bg_register.png') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo a {
+    text-decoration: none;
+}
+
+.logo img {
+    max-width: 150px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav ul li a.active {
+    color: #3498db;
+    font-weight: 600;
+    border-bottom: 2px solid #3498db;
+}
+
+nav ul li a:hover {
+    color: #3498db;
+}
+
+.avatar {
+    position: relative;
+    cursor: pointer;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.avatar-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    min-width: 150px;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.avatar-menu a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #2c3e50;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.avatar-menu a:hover {
+    background: #f1f1f1;
+}
+
+main {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.hero {
+    margin-bottom: 60px;
+}
+
+.hero h1 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #7f8c8d;
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 12px 25px;
+    background: #2c3e50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.cta-button:hover {
+    background: #34495e;
+    transform: translateY(-2px);
+}
+
+.featured, .why-choose-us, .testimonials, .events, .cta-section {
+    margin-bottom: 60px;
+}
+
+.featured h2, .why-choose-us h2, .testimonials h2, .events h2, .cta-section h2 {
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.featured-items, .why-items, .testimonial-items, .event-items {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.item, .why-item, .testimonial, .event {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    transition: transform 0.3s ease;
+}
+
+.item:hover, .why-item:hover, .testimonial:hover, .event:hover {
+    transform: translateY(-5px);
+}
+
+.item img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.item h3, .why-item h3, .testimonial h3, .event h3 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin: 10px 0;
+}
+
+.item p, .why-item p, .testimonial p, .event p {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+.why-item .icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.testimonial {
+    text-align: center;
+}
+
+.testimonial p {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.testimonial span {
+    color: #34495e;
+    font-weight: 500;
+}
+
+.event a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.event a:hover {
+    color: #2980b9;
+}
+
+.cta-section {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+footer {
+    background: rgba(44, 62, 80, 0.9);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.footer-section p, .footer-section a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.footer-section a:hover {
+    color: #3498db;
+}
+
+.footer-note {
+    font-size: 12px;
+    color: #bdc3c7;
+}
+
+.avatar-section {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.avatar-section span {
+    margin-right: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: #333;
+}
+
+.avatar-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    min-width: 150px;
+}
+
+.avatar-menu a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+.avatar-menu a:hover {
+    background-color: #f5f5f5;
+}
+
+/* Thêm style mới cho Events, Achievements, và Courses */
+.event-list, .achievement-list, .course-list {
+    padding: 40px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.event-items, .achievement-items, .course-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.event-item, .achievement-item, .course-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.event-item:hover, .achievement-item:hover, .course-item:hover {
+    transform: translateY(-5px);
+}
+
+.event-item img, .course-item img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.achievement-item i {
+    font-size: 2em;
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+.event-item h3, .achievement-item h3, .course-item h3 {
+    font-size: 18px;
+    color: #2c3e50;
+    margin: 10px 0;
+}
+
+.event-item p, .achievement-item p, .course-item p {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.cta-button-small {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.cta-button-small:hover {
+    background-color: #218838;
+}

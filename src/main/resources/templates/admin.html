@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Dashboard - NTEM English Learning</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/admin.css}" />
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h2>Admin Panel</h2>
+    <img th:src="@{/images/logo_website.png}" alt="Logo" class="sidebar-logo">
+  </div>
+  <nav class="sidebar-nav">
+    <a th:href="@{/admin/managecourse}" class="nav-item">Manage Courses</a>
+    <a th:href="@{/admin/managelessons}" class="nav-item">Manage Lessons</a>
+    <a th:href="@{/admin/manageenrollments}" class="nav-item">Manage Enrollments</a>
+    <a th:href="@{/admin/manageresources}" class="nav-item">Manage Resources</a>
+  </nav>
+</div>
+
+<div class="main-content">
+  <header class="main-header">
+    <h1>Welcome, <span th:text="${fullName}"></span></h1>
+    <div class="user-info">
+      <span th:text="'Last Login: ' + ${lastLogin != null ? lastLogin : 'N/A'}"></span>
+    </div>
+  </header>
+
+  <div class="dashboard">
+    <div class="welcome-card">
+      <h2>Admin Dashboard</h2>
+      <p>Welcome to the NTEM English Learning Admin Panel! Use the sidebar to manage courses, lessons, enrollments, and resources. Start by selecting an option from the menu.</p>
+      <p class="notification" th:if="${message}" th:text="${message}"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleMenu() {
+    var menu = document.getElementById("avatarMenu");
+    if (menu.style.display === "block") {
+      menu.style.display = "none";
+    } else {
+      menu.style.display = "block";
+    }
+  }
+</script>
+</body>
+</html>

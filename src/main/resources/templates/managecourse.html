@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Courses - NTEM Admin</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/admin.css}" />
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h2>Admin Panel</h2>
+    <img th:src="@{/images/logo_website.png}" alt="Logo" class="sidebar-logo">
+  </div>
+  <nav class="sidebar-nav">
+    <a th:href="@{/admin/managecourse}" class="nav-item active">Manage Courses</a>
+    <a th:href="@{/admin/managelessons}" class="nav-item">Manage Lessons</a>
+    <a th:href="@{/admin/manageenrollments}" class="nav-item">Manage Enrollments</a>
+    <a th:href="@{/admin/manageresources}" class="nav-item">Manage Resources</a>
+  </nav>
+</div>
+
+<div class="main-content">
+  <header class="main-header">
+    <h1>Manage Courses</h1>
+    <div class="user-info">
+      <span th:text="'Last Login: ' + ${lastLogin != null ? lastLogin : 'N/A'}"></span>
+    </div>
+  </header>
+
+  <div class="dashboard">
+    <div class="card">
+      <form th:action="@{/admin/add-managecourse}" method="post" class="admin-form">
+        <div class="form-group">
+          <label for="courseTitle">Course Title</label>
+          <input type="text" id="courseTitle" name="title" placeholder="Enter course title" required>
+        </div>
+        <div class="form-group">
+          <label for="courseDescription">Description</label>
+          <textarea id="courseDescription" name="description" placeholder="Enter course description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="courseStatus">Status</label>
+          <select id="courseStatus" name="status" required>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="teacherId">Teacher ID</label>
+          <input type="number" id="teacherId" name="teacherId" placeholder="Enter teacher ID" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Add Course</button>
+          <button type="button" class="btn-secondary" th:onclick="'window.location.href=\'/admin/delete-managecourse\''">Delete Course</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Existing Courses</h2>
+      <table class="course-table">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Teacher</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="course : ${courses}">
+          <td th:text="${course.title}"></td>
+          <td th:text="${course.description}"></td>
+          <td th:text="${course.status}"></td>
+          <td th:text="${course.teacherId}"></td>
+          <td>
+            <button class="btn-secondary" th:onclick="'window.location.href=\'/admin/delete-managecourse?courseId=' + ${course.courseId}\'">Delete</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleMenu() {
+    var menu = document.getElementById("avatarMenu");
+    if (menu.style.display === "block") {
+      menu.style.display = "none";
+    } else {
+      menu.style.display = "block";
+    }
+  }
+</script>
+</body>
+</html>

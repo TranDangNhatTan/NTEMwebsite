@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>NTEM English Learning - Homepage</title>
+  <link rel="stylesheet" th:href="@{/css/home.css}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+<div class="background"></div>
+<header>
+  <div class="logo">
+    <a th:href="@{/index}">
+      <img src="/images/logo_website.png" alt="NTEM English Learning Logo" />
+    </a>
+  </div>
+  <nav>
+    <ul>
+      <li><a th:href="@{/index}" th:class="${currentPage == '/index'} ? 'active' : ''">Home</a></li>
+      <li><a th:href="@{/events}" th:class="${currentPage == '/events'} ? 'active' : ''">Events</a></li>
+      <li><a th:href="@{/achievements}" th:class="${currentPage == '/achievements'} ? 'active' : ''">Achievements</a></li>
+      <li><a th:href="@{/courses}" th:class="${currentPage == '/courses'} ? 'active' : ''">Courses</a></li>
+    </ul>
+  </nav>
+  <div class="avatar-section" onclick="toggleMenu()">
+    <span th:text="${fullName != null ? fullName : ''}" th:unless="${fullName == null}"></span>
+    <i class="fas fa-user-circle"></i>
+    <div class="avatar-menu" id="avatarMenu">
+      <a th:href="@{/login}" th:class="${currentPage == '/login'} ? 'active' : ''">Login</a>
+      <a th:href="@{/register}" th:class="${currentPage == '/register'} ? 'active' : ''">Register</a>
+      <a th:href="@{/my-courses}">My Courses</a>
+      <a th:href="@{/change-password}">Change Password</a>
+      <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin}">Admin</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Welcome to NTEM English Learning</h1>
+    <p>Discover a world of language learning with our innovative courses and inspiring community.</p>
+    <a href="/courses" class="cta-button">Explore Courses</a>
+  </section>
+
+  <section class="featured">
+    <h2>Featured Programs</h2>
+    <div class="featured-items">
+      <div class="item">
+        <img src="/images/featured1.jpg" alt="Program 1">
+        <h3>Beginner English</h3>
+        <p>Start your journey with basic English skills.</p>
+      </div>
+      <div class="item">
+        <img src="/images/featured2.jpg" alt="Program 2">
+        <h3>Advanced Conversation</h3>
+        <p>Master fluent English with advanced techniques.</p>
+      </div>
+      <div class="item">
+        <img src="/images/featured3.jpg" alt="Program 3">
+        <h3>Business English</h3>
+        <p>Enhance your career with professional English.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="why-choose-us">
+    <h2>Why Choose NTEM?</h2>
+    <div class="why-items">
+      <div class="why-item">
+        <i class="icon">🎓</i>
+        <h3>Expert Teachers</h3>
+        <p>Learn from certified instructors with years of experience.</p>
+      </div>
+      <div class="why-item">
+        <i class="icon">🌐</i>
+        <h3>Flexible Learning</h3>
+        <p>Access courses anytime, anywhere with our online platform.</p>
+      </div>
+      <div class="why-item">
+        <i class="icon">💡</i>
+        <h3>Innovative Methods</h3>
+        <p>Engage with modern teaching techniques and interactive tools.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <h2>What Our Learners Say</h2>
+    <div class="testimonial-items">
+      <div class="testimonial">
+        <p>"NTEM helped me improve my English confidence in just a few months!"</p>
+        <span>- Anna Pham</span>
+      </div>
+      <div class="testimonial">
+        <p>"The courses are well-structured and the teachers are amazing!"</p>
+        <span>- Minh Nguyen</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>Start Your Learning Journey Today</h2>
+    <p>Join thousands of learners and unlock your potential with NTEM.</p>
+    <a href="/register" class="cta-button">Get Started Now</a>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Contact Us</h3>
+      <p>Email: info@ntem.com</p>
+      <p>Phone: +84 123 456 789</p>
+    </div>
+    <div class="footer-section">
+      <h3>Follow Us</h3>
+      <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+    </div>
+  </div>
+  <p class="footer-note">© 2025 NTEM English Learning. All rights reserved.</p>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById("avatarMenu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  }
+
+  document.addEventListener("click", function(event) {
+    const avatar = document.querySelector(".avatar-section");
+    const menu = document.getElementById("avatarMenu");
+    if (!avatar.contains(event.target)) {
+      menu.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" th:href="@{/css/login.css}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" />
+</head>
+<body>
+<div class="background"></div>
+<div class="container">
+  <div class="logo">
+    <img src="/images/logo_website.png" alt="NTEM English Learning Logo" />
+  </div>
+  <h2>Please sign in</h2>
+  <p class="intro">If you don't have an NTEM account you can register now. It's quick, easy and free.</p>
+  <p th:if="${param.error}" class="error">Invalid username or password. Please try again.</p>
+  <p th:if="${message}" th:text="${message}" style="color: #e74c3c; margin-bottom: 15px;"></p>
+  <form th:action="@{/perform_login}" th:method="post"> <!-- Cập nhật action -->
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="username" required placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" name="password" required placeholder="Enter your password">
+        <span class="show-password" onclick="togglePassword()">Show</span>
+      </div>
+    </div>
+    <div class="links">
+      <a href="#">Forgotten your password? You can reset it.</a>
+    </div>
+    <button type="submit">Sign in</button>
+  </form>
+  <a href="/register" class="back-link">If you're not ready, you can go back.</a>
+</div>
+<script>
+  function togglePassword() {
+    const password = document.getElementById("password");
+    password.type = password.type === "password" ? "text" : "password";
+  }
+</script>
+</body>
+</html>
