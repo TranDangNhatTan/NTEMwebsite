@@ -168,9 +168,13 @@ public class HomeController {
     }
 
     @GetMapping("/admin/approve-manageenrollments")
-    public String approveManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, Model model) {
-        enrollmentService.approve(enrollmentId);
-        model.addAttribute("message", "Phê duyệt đăng ký thành công!");
+    public String approveManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, RedirectAttributes redirectAttributes) {
+        try {
+            enrollmentService.approve(enrollmentId);
+            redirectAttributes.addFlashAttribute("message", "Phê duyệt đăng ký thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi phê duyệt: " + e.getMessage());
+        }
         return "redirect:/admin/manageenrollments";
     }
 
@@ -191,22 +195,22 @@ public class HomeController {
     }
 
     @PostMapping("/register-course")
-    public String registerCourse(@RequestParam("courseId") Integer courseId, Model model) {
+    public String registerCourse(@RequestParam("courseId") Integer courseId, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
             User user = (User) auth.getPrincipal();
             if (user.getRole() == null || (user.getRole().getRoleType() != Role.RoleType.ADMIN && user.getRole().getRoleType() != Role.RoleType.STUDENT)) {
-                model.addAttribute("error", "Chỉ admin và học sinh mới có thể đăng ký khóa học!");
+                redirectAttributes.addFlashAttribute("error", "Chỉ admin và học sinh mới có thể đăng ký khóa học!");
                 return "redirect:/courses";
             }
             try {
                 courseRegistrationService.registerForCourse(courseId);
-                model.addAttribute("message", "Đăng ký khóa học thành công!");
+                redirectAttributes.addFlashAttribute("message", "Đăng ký khóa học thành công! Vui lòng chờ phê duyệt.");
             } catch (Exception e) {
-                model.addAttribute("error", "Không thể đăng ký khóa học: " + e.getMessage());
+                redirectAttributes.addFlashAttribute("error", "Không thể đăng ký khóa học: " + e.getMessage());
             }
         } else {
-            model.addAttribute("error", "Vui lòng đăng nhập!");
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập!");
         }
         return "redirect:/courses";
     }
@@ -216,7 +220,7 @@ public class HomeController {
                                   @RequestParam("description") String description,
                                   @RequestParam("status") String status,
                                   @RequestParam("teacherId") Integer teacherId,
-                                  Model model) {
+                                  RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
             User user = (User) auth.getPrincipal();
@@ -231,7 +235,7 @@ public class HomeController {
         course.setTeacherId(teacherId);
         course.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         courseService.save(course);
-        model.addAttribute("message", "Thêm khóa học thành công!");
+        redirectAttributes.addFlashAttribute("message", "Thêm khóa học thành công!");
         return "redirect:/admin/managecourse";
     }
 
@@ -308,7 +312,7 @@ public class HomeController {
     @PostMapping("/admin/add-manageresources")
     public String addManageResources(@RequestParam("lessonId") Integer lessonId,
                                      @RequestParam("file") MultipartFile file,
-                                     Model model) throws IOException {
+                                     RedirectAttributes redirectAttributes) throws IOException {
         if (!file.isEmpty()) {
             String fileName = System.nanoTime() + "_" + file.getOriginalFilename();
             Path path = Paths.get("uploads/resources/" + fileName);
@@ -327,16 +331,16 @@ public class HomeController {
                 } else if (contentType.startsWith("audio/")) {
                     resource.setFileType(Resource.FileType.audio);
                 } else {
-                    model.addAttribute("error", "Loại tệp không hỗ trợ!");
+                    redirectAttributes.addFlashAttribute("error", "Loại tệp không hỗ trợ!");
                     return "redirect:/admin/manageresources";
                 }
             }
             resource.setUploadedBy(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
             resource.setUploadedAt(new Timestamp(System.currentTimeMillis()));
             resourceService.save(resource);
-            model.addAttribute("message", "Tải lên tài nguyên thành công!");
+            redirectAttributes.addFlashAttribute("message", "Tải lên tài nguyên thành công!");
         } else {
-            model.addAttribute("error", "Vui lòng chọn tệp để tải lên!");
+            redirectAttributes.addFlashAttribute("error", "Vui lòng chọn tệp để tải lên!");
         }
         return "redirect:/admin/manageresources";
     }
@@ -362,30 +366,30 @@ public class HomeController {
     }
 
     @GetMapping("/admin/reject-manageenrollments")
-    public String rejectManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, Model model) {
+    public String rejectManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, RedirectAttributes redirectAttributes) {
         enrollmentService.reject(enrollmentId);
-        model.addAttribute("message", "Từ chối đăng ký thành công!");
+        redirectAttributes.addFlashAttribute("message", "Từ chối đăng ký thành công!");
         return "redirect:/admin/manageenrollments";
     }
 
     @GetMapping("/admin/delete-manageenrollments")
-    public String deleteManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, Model model) {
+    public String deleteManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, RedirectAttributes redirectAttributes) {
         enrollmentService.deleteById(enrollmentId);
-        model.addAttribute("message", "Xóa đăng ký thành công!");
+        redirectAttributes.addFlashAttribute("message", "Xóa đăng ký thành công!");
         return "redirect:/admin/manageenrollments";
     }
 
     @GetMapping("/admin/delete-managecourse")
-    public String deleteManageCourse(@RequestParam("courseId") Integer courseId, Model model) {
+    public String deleteManageCourse(@RequestParam("courseId") Integer courseId, RedirectAttributes redirectAttributes) {
         courseService.deleteById(courseId);
-        model.addAttribute("message", "Xóa khóa học thành công!");
+        redirectAttributes.addFlashAttribute("message", "Xóa khóa học thành công!");
         return "redirect:/admin/managecourse";
     }
 
     @GetMapping("/admin/delete-managelessons")
-    public String deleteManageLessons(@RequestParam("lessonId") Integer lessonId, Model model) {
+    public String deleteManageLessons(@RequestParam("lessonId") Integer lessonId, RedirectAttributes redirectAttributes) {
         lessonService.deleteById(lessonId);
-        model.addAttribute("message", "Xóa bài học thành công!");
+        redirectAttributes.addFlashAttribute("message", "Xóa bài học thành công!");
         return "redirect:/admin/managelessons";
     }
 
@@ -402,7 +406,6 @@ public class HomeController {
         }
     }
 
-    // Thêm endpoint để lấy danh sách khóa học đã đăng ký
     @GetMapping("/api/my-courses")
     @ResponseBody
     public List<Course> getMyCourses() {
@@ -414,7 +417,6 @@ public class HomeController {
         return List.of();
     }
 
-    // Thêm endpoint để lấy danh sách bài học theo khóa học
     @GetMapping("/api/lessons/{courseId}")
     @ResponseBody
     public List<Lesson> getLessonsByCourseId(@PathVariable Integer courseId) {

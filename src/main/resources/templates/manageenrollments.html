@@ -46,8 +46,8 @@
           <td th:text="${enrollment.course.title}"></td>
           <td th:text="${enrollment.status}"></td>
           <td>
-            <button class="btn-primary" th:onclick="'window.location.href=\'/admin/approve-manageenrollments?enrollmentId=' + ${enrollment.enrollmentId}\'">Approve</button>
-            <button class="btn-secondary" th:onclick="'window.location.href=\'/admin/delete-manageenrollments?enrollmentId=' + ${enrollment.enrollmentId}\'">Delete</button>
+            <button class="btn-primary" th:onclick="|window.location.href='@{/admin/approve-manageenrollments(enrollmentId=${enrollment.enrollmentId})}'|">Approve</button>
+            <button class="btn-secondary" th:onclick="|window.location.href='@{/admin/delete-manageenrollments(enrollmentId=${enrollment.enrollmentId})}'|">Delete</button>
           </td>
         </tr>
         </tbody>
