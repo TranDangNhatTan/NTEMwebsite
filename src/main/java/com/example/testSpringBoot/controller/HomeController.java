@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -40,7 +41,7 @@ public class HomeController {
     @Autowired
     private CourseRegistrationService courseRegistrationService;
 
-    private static final String UPLOAD_DIR = "uploads/lessons/";
+    private static final String UPLOAD_DIR = "Uploads/lessons/";
     private static final long MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
     @GetMapping({"/", "/index"})
@@ -166,6 +167,13 @@ public class HomeController {
         return "manageenrollments";
     }
 
+    @GetMapping("/admin/approve-manageenrollments")
+    public String approveManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, Model model) {
+        enrollmentService.approve(enrollmentId);
+        model.addAttribute("message", "Phê duyệt đăng ký thành công!");
+        return "redirect:/admin/manageenrollments";
+    }
+
     @GetMapping("/admin/manageresources")
     public String showManageResourcesManagement(Model model, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -250,7 +258,6 @@ public class HomeController {
         lesson.setContent(content);
         lesson.setLessonOrder(lessonService.findMaxOrderByCourseId(courseId).orElse(0) + 1);
 
-        // Kiểm tra và upload video
         if (video != null && !video.isEmpty()) {
             if (video.getSize() > MAX_FILE_SIZE) {
                 redirectAttributes.addFlashAttribute("error", "Video vượt quá kích thước tối đa (100MB)!");
@@ -268,7 +275,6 @@ public class HomeController {
             lesson.setVideoUrl(fileName);
         }
 
-        // Kiểm tra và upload material
         if (material != null && !material.isEmpty()) {
             if (material.getSize() > MAX_FILE_SIZE) {
                 redirectAttributes.addFlashAttribute("error", "Tài liệu vượt quá kích thước tối đa (100MB)!");
@@ -355,13 +361,6 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/admin/approve-manageenrollments")
-    public String approveManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, Model model) {
-        enrollmentService.approve(enrollmentId);
-        model.addAttribute("message", "Phê duyệt đăng ký thành công!");
-        return "redirect:/admin/manageenrollments";
-    }
-
     @GetMapping("/admin/reject-manageenrollments")
     public String rejectManageEnrollments(@RequestParam("enrollmentId") Long enrollmentId, Model model) {
         enrollmentService.reject(enrollmentId);
@@ -401,6 +400,25 @@ public class HomeController {
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Bài học hoặc tài liệu không được tìm thấy!");
         }
+    }
+
+    // Thêm endpoint để lấy danh sách khóa học đã đăng ký
+    @GetMapping("/api/my-courses")
+    @ResponseBody
+    public List<Course> getMyCourses() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User) {
+            User user = (User) auth.getPrincipal();
+            return enrollmentService.findCoursesByUserId(user.getUserId());
+        }
+        return List.of();
+    }
+
+    // Thêm endpoint để lấy danh sách bài học theo khóa học
+    @GetMapping("/api/lessons/{courseId}")
+    @ResponseBody
+    public List<Lesson> getLessonsByCourseId(@PathVariable Integer courseId) {
+        return lessonService.findByCourseId(courseId);
     }
 
     private void addUserFullNameToModel(Model model) {

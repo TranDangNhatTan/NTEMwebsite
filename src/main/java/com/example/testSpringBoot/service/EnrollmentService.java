@@ -1,5 +1,6 @@
 package com.example.testSpringBoot.service;
 
+import com.example.testSpringBoot.model.Course;
 import com.example.testSpringBoot.model.Enrollment;
 
 import java.util.List;
@@ -9,4 +10,5 @@ public interface EnrollmentService {
     void approve(Long enrollmentId);
     void reject(Long enrollmentId);
     void deleteById(Long enrollmentId);
+    List<Course> findCoursesByUserId(Integer userId);
 }

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khóa học của tôi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+    .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 800px; border-radius: 8px; }
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .close:hover { color: #000; }
+    .lesson-card { transition: all 0.3s ease; }
+    .lesson-card:hover { transform: scale(1.02); }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+<div class="container mx-auto p-6">
+  <h1 class="text-3xl font-bold text-center mb-6">Khóa học của tôi</h1>
+  <div id="courses-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Danh sách khóa học sẽ được thêm bằng JavaScript -->
+  </div>
+</div>
+
+<!-- Modal hiển thị bài học -->
+<div id="lessonModal" class="modal">
+  <div class="modal-content">
+    <span class="close">×</span>
+    <h2 id="modal-title" class="text-2xl font-bold mb-4"></h2>
+    <div id="lessons-container" class="space-y-4">
+      <!-- Danh sách bài học sẽ được thêm -->
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    // Lấy danh sách khóa học đã đăng ký
+    $.ajax({
+      url: '/api/my-courses',
+      method: 'GET',
+      success: function(courses) {
+        const container = $('#courses-container');
+        container.empty();
+        if (courses.length === 0) {
+          container.append('<p class="text-center text-gray-500">Bạn chưa đăng ký khóa học nào.</p>');
+        } else {
+          courses.forEach(course => {
+            container.append(`
+                                <div class="course-card bg-white p-4 rounded-lg shadow-md cursor-pointer" data-course-id="${course.courseId}">
+                                    <h3 class="text-xl font-semibold">${course.title}</h3>
+                                    <p class="text-gray-600">${course.description}</p>
+                                </div>
+                            `);
+          });
+        }
+      },
+      error: function(xhr) {
+        $('#courses-container').append('<p class="text-center text-red-500">Lỗi khi tải khóa học: ' + xhr.responseText + '</p>');
+      }
+    });
+
+    // Xử lý nhấp vào khóa học
+    $(document).on('click', '.course-card', function() {
+      const courseId = $(this).data('course-id');
+      const courseTitle = $(this).find('h3').text();
+      $('#modal-title').text(courseTitle);
+      $('#lessonModal').show();
+
+      // Lấy danh sách bài học
+      $.ajax({
+        url: '/api/lessons/' + courseId,
+        method: 'GET',
+        success: function(lessons) {
+          const container = $('#lessons-container');
+          container.empty();
+          if (lessons.length === 0) {
+            container.append('<p class="text-center text-gray-500">Khóa học này chưa có bài học.</p>');
+          } else {
+            lessons.forEach(lesson => {
+              container.append(`
+                                    <div class="lesson-card bg-gray-50 p-4 rounded-lg shadow-sm">
+                                        <h4 class="text-lg font-semibold">${lesson.title}</h4>
+                                        <p class="text-gray-600">${lesson.content}</p>
+                                        ${lesson.videoUrl ? `
+                                            <video controls class="w-full mt-2 rounded" style="max-height: 300px;">
+                                                <source src="/uploads/lessons/${lesson.videoUrl}" type="video/mp4">
+                                                Trình duyệt không hỗ trợ video.
+                                            </video>
+                                        ` : ''}
+                                        ${lesson.materialUrl ? `
+                                            <a href="/resources/material/${lesson.lessonId}" class="inline-block mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Tải tài liệu PDF</a>
+                                        ` : ''}
+                                    </div>
+                                `);
+            });
+          }
+        },
+        error: function(xhr) {
+          $('#lessons-container').append('<p class="text-center text-red-500">Lỗi khi tải bài học: ' + xhr.responseText + '</p>');
+        }
+      });
+    });
+
+    // Đóng modal
+    $('.close').click(function() {
+      $('#lessonModal').hide();
+    });
+
+    // Đóng modal khi nhấp ra ngoài
+    $(window).click(function(event) {
+      if (event.target.id === 'lessonModal') {
+        $('#lessonModal').hide();
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -43,4 +43,10 @@ public class LessonServiceImpl implements LessonService {
     public List<Lesson> findAllWithCourse() {
         return lessonRepository.findAllWithCourse();
     }
+
+    // Thêm triển khai mới
+    @Override
+    public List<Lesson> findByCourseId(Integer courseId) {
+        return lessonRepository.findByCourseId(courseId);
+    }
 }
