@@ -20,10 +20,10 @@ public class SecurityConfig {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private CustomAuthenticationSuccessHandler authenticationSuccessHandler; // Tiêm handler thành công
+    private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
-    private CustomAuthenticationFailureHandler authenticationFailureHandler; // Tiêm handler thất bại
+    private CustomAuthenticationFailureHandler authenticationFailureHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,17 +43,18 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/css/**", "/images/**", "/js/**", "/vendor/**").permitAll()
-                        .requestMatchers("/", "/index", "/register", "/courses", "/events", "/achievements").permitAll()
+                        .requestMatchers(
+                                "/css/**", "/images/**", "/js/**", "/vendor/**", // Các file tĩnh
+                                "/", "/index", "/register", "/courses", "/events", "/achievements", // Các trang công khai
+                                "/forgot-password", "/reset-password" // <-- THÊM CÁC ĐƯỜNG DẪN NÀY
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")
-                        // .defaultSuccessUrl("/index", true) // Bỏ dòng này
-                        // .failureUrl("/login?error=true") // Bỏ dòng này
-                        .successHandler(authenticationSuccessHandler) // <-- SỬ DỤNG HANDLER MỚI
-                        .failureHandler(authenticationFailureHandler) // <-- SỬ DỤNG HANDLER MỚI
+                        .successHandler(authenticationSuccessHandler)
+                        .failureHandler(authenticationFailureHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout

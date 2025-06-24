@@ -2,103 +2,85 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel</title>
+    <title>Manage Lessons - NTEM Admin</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}" />
 </head>
 <body>
-<div class="sidebar">
-    <div class="sidebar-header">
-        <h2>Admin Panel</h2>
-        <img th:src="@{/images/logo_website.png}" alt="Logo" class="sidebar-logo">
-    </div>
-    <nav class="sidebar-nav">
-        <a th:href="@{/admin/managecourse}" class="nav-item">Manage Courses</a>
-        <a th:href="@{/admin/managelessons}" class="nav-item">Manage Lessons</a>
-        <a th:href="@{/admin/manageenrollments}" class="nav-item active">Manage Enrollments</a>
-        <a th:href="@{/admin/manageresources}" class="nav-item">Manage Resources</a>
-        <a th:href="@{/admin/vocabulary}" class="nav-item">Manage Vocabulary</a>
-        <a th:href="@{/admin/login-logs}" class="nav-item">Login Logs</a>
-    </nav>
-</div>
+
+<div th:replace="~{fragments/sidebar :: sidebar(activePage='lessons')}"></div>
 
 <div class="main-content">
-    <h2>Manage Lessons</h2>
+    <header class="main-header">
+        <h1>Manage Lessons</h1>
+    </header>
 
-    <div th:if="${error != null}" class="alert alert-danger">
-        <span th:text="${error}"></span>
-    </div>
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <div class="add-lesson-form">
-        <h3>Add New Lesson</h3>
-        <form th:action="@{/admin/add-managelessons}" th:object="${lesson}" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="courseId">Select Course</label>
-                <select th:field="*{courseId}" id="courseId" name="courseId" required>
-                    <option value="">Select a course</option>
-                    <option th:each="course : ${courses}" th:value="${course.courseId}" th:text="${course.title}"></option>
-                </select>
-            </div>
+    <div class="dashboard">
+        <div class="card">
+            <h3>Add New Lesson</h3>
+            <form th:action="@{/admin/add-managelessons}" th:object="${lesson}" method="post" enctype="multipart/form-data" class="admin-form">
+                <div class="form-group">
+                    <label for="courseId">Select Course</label>
+                    <select id="courseId" name="courseId" required>
+                        <option value="">Select a course</option>
+                        <option th:each="course : ${courses}" th:value="${course.courseId}" th:text="${course.title}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="title">Lesson Title</label>
+                    <input type="text" id="title" name="title" required />
+                </div>
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" name="content"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="video">Upload Video</label>
+                    <input type="file" id="video" name="video" accept="video/*" />
+                </div>
+                <div class="form-group">
+                    <label for="material">Upload Document</label>
+                    <input type="file" id="material" name="material" accept=".pdf,.doc,.docx" />
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Add Lesson</button>
+                </div>
+            </form>
+        </div>
 
-            <div class="form-group">
-                <label for="title">Lesson Title</label>
-                <input type="text" th:field="*{title}" id="title" name="title" required />
-            </div>
-
-            <div class="form-group">
-                <label for="content">Content</label>
-                <textarea th:field="*{content}" id="content" name="content"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="video">Upload Video</label>
-                <input type="file" id="video" name="video" accept="video/*" />
-            </div>
-
-            <div class="form-group">
-                <label for="material">Upload Document</label>
-                <input type="file" id="material" name="material" accept=".pdf,.doc,.docx" />
-            </div>
-
-            <div class="form-group">
-                <button type="submit">Add Lesson</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="card">
-        <h3>Existing Lessons</h3>
-        <table class="course-table">
-            <thead>
-            <tr>
-                <th>Title</th>
-                <th>Course</th>
-                <th>Video</th>
-                <th>Document</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="lesson : ${lessons}">
-                <td th:text="${lesson.title}"></td>
-                <td th:text="${lesson.course.title}"></td>
-                <td th:if="${lesson.videoUrl != null}">
-                    <a th:href="${lesson.videoUrl}" target="_blank">View Video</a>
-                </td>
-                <td th:if="${lesson.videoUrl == null}">
-                    <span>No video</span>
-                </td>
-                <td th:if="${lesson.materialUrl != null}">
-                    <a th:href="${lesson.materialUrl}" target="_blank">View Document</a>
-                </td>
-                <td th:if="${lesson.materialUrl == null}">
-                    <span>No document</span>
-                </td>
-                <td>
-                    <a th:href="@{/deleteLesson(id=${lesson.lessonId})}" onclick="return confirm('Are you sure you want to delete this lesson?')">Delete</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="card">
+            <h3>Existing Lessons</h3>
+            <table class="course-table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Course</th>
+                    <th>Video</th>
+                    <th>Document</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="lesson : ${lessons}">
+                    <td th:text="${lesson.title}"></td>
+                    <td th:text="${lesson.course.title}"></td>
+                    <td>
+                        <a th:if="${lesson.videoUrl != null}" th:href="${lesson.videoUrl}" target="_blank">View Video</a>
+                        <span th:if="${lesson.videoUrl == null}">No video</span>
+                    </td>
+                    <td>
+                        <a th:if="${lesson.materialUrl != null}" th:href="${lesson.materialUrl}" target="_blank">View Document</a>
+                        <span th:if="${lesson.materialUrl == null}">No document</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/deleteLesson(id=${lesson.lessonId})}" onclick="return confirm('Are you sure you want to delete this lesson?')" class="btn-secondary">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </body>

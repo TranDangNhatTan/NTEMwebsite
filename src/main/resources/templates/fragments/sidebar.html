@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="sidebar" th:fragment="sidebar(activePage)">
+  <div class="sidebar-header">
+    <h2>Admin Panel</h2>
+    <a th:href="@{/index}">
+      <img th:src="@{/images/logo_website.png}" alt="Logo" class="sidebar-logo">
+    </a>
+  </div>
+  <nav class="sidebar-nav">
+    <a th:href="@{/admin/managecourse}" class="nav-item" th:classappend="${activePage == 'courses'} ? 'active'">Manage Courses</a>
+    <a th:href="@{/admin/managelessons}" class="nav-item" th:classappend="${activePage == 'lessons'} ? 'active'">Manage Lessons</a>
+    <a th:href="@{/admin/manageenrollments}" class="nav-item" th:classappend="${activePage == 'enrollments'} ? 'active'">Manage Enrollments</a>
+    <a th:href="@{/admin/manageresources}" class="nav-item" th:classappend="${activePage == 'resources'} ? 'active'">Manage Resources</a>
+    <a th:href="@{/admin/vocabulary}" class="nav-item" th:classappend="${activePage == 'vocabulary'} ? 'active'">Manage Vocabulary</a>
+    <a th:href="@{/admin/login-logs}" class="nav-item" th:classappend="${activePage == 'logs'} ? 'active'">Login Logs</a>
+  </nav>
+</div>
+
+</body>
+</html>

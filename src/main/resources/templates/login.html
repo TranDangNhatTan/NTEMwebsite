@@ -14,8 +14,9 @@
   <h2>Please sign in</h2>
   <p class="intro">If you don't have an NTEM account you can register now. It's quick, easy and free.</p>
   <p th:if="${param.error}" class="error">Invalid username or password. Please try again.</p>
-  <p th:if="${message}" th:text="${message}" style="color: #e74c3c; margin-bottom: 15px;"></p>
-  <form th:action="@{/perform_login}" th:method="post"> <!-- Cập nhật action -->
+  <p th:if="${message}" style="color: green; margin-bottom: 15px;" th:text="${message}"></p>
+
+  <form th:action="@{/perform_login}" method="post">
     <div class="form-group">
       <label for="email">Email address</label>
       <input type="email" id="email" name="username" required placeholder="Enter your email">
@@ -28,7 +29,7 @@
       </div>
     </div>
     <div class="links">
-      <a href="#">Forgotten your password? You can reset it.</a>
+      <a th:href="@{/forgot-password}">Forgotten your password? You can reset it.</a>
     </div>
     <button type="submit">Sign in</button>
   </form>
