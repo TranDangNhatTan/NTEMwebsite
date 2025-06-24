@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Login Logs - NTEM Admin</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+  <style>
+    .status-success {
+      color: green;
+      font-weight: bold;
+    }
+    .status-failure {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h2>Admin Panel</h2>
+    <img th:src="@{/images/logo_website.png}" alt="Logo" class="sidebar-logo">
+  </div>
+  <nav class="sidebar-nav">
+    <a th:href="@{/admin/managecourse}" class="nav-item">Manage Courses</a>
+    <a th:href="@{/admin/managelessons}" class="nav-item">Manage Lessons</a>
+    <a th:href="@{/admin/manageenrollments}" class="nav-item">Manage Enrollments</a>
+    <a th:href="@{/admin/manageresources}" class="nav-item">Manage Resources</a>
+    <a th:href="@{/admin/vocabulary}" class="nav-item">Manage Vocabulary</a>
+    <a th:href="@{/admin/login-logs}" class="nav-item active">Login Logs</a> </nav>
+</div>
+
+<div class="main-content">
+  <header class="main-header">
+    <h1>Login Attempt Logs</h1>
+  </header>
+
+  <div class="dashboard">
+    <div class="card">
+      <h2>Login History</h2>
+      <table class="enrollment-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>IP Address</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(loginLogs)}">
+          <td colspan="5" style="text-align: center;">No login attempts recorded.</td>
+        </tr>
+        <tr th:each="log : ${loginLogs}">
+          <td th:text="${log.id}"></td>
+          <td th:text="${log.username}"></td>
+          <td th:text="${log.ipAddress}"></td>
+          <td th:text="${#dates.format(log.loginTime, 'dd-MM-yyyy HH:mm:ss')}"></td>
+          <td>
+                        <span th:text="${log.status}"
+                              th:class="${log.status == 'SUCCESS'} ? 'status-success' : 'status-failure'">
+                        </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

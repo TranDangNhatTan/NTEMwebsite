@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Vocabulary - NTEM Admin</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h2>Admin Panel</h2>
+    <img th:src="@{/images/logo_website.png}" alt="Logo" class="sidebar-logo">
+  </div>
+  <nav class="sidebar-nav">
+    <a th:href="@{/admin/managecourse}" class="nav-item">Manage Courses</a>
+    <a th:href="@{/admin/managelessons}" class="nav-item">Manage Lessons</a>
+    <a th:href="@{/admin/manageenrollments}" class="nav-item">Manage Enrollments</a>
+    <a th:href="@{/admin/manageresources}" class="nav-item">Manage Resources</a>
+    <a th:href="@{/admin/vocabulary}" class="nav-item active">Manage Vocabulary</a>
+    <a th:href="@{/admin/login-logs}" class="nav-item">Login Logs</a>
+  </nav>
+</div>
+
+<div class="main-content">
+  <header class="main-header">
+    <h1>Manage Vocabulary</h1>
+  </header>
+
+  <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+  <div class="dashboard">
+    <div class="card">
+      <h2>Import Vocabulary from XML</h2>
+      <form th:action="@{/admin/vocabulary/import}" method="post" enctype="multipart/form-data" class="form-inline">
+        <input type="file" name="file" accept=".xml" required>
+        <button type="submit" class="btn-primary">Import</button>
+      </form>
+    </div>
+
+<!--    <div class="card">-->
+<!--      <h2>Export Vocabulary to XML</h2>-->
+<!--      <p>Export all vocabularies from the database to an XML file for backup.</p>-->
+<!--      <a th:href="@{/admin/vocabulary/export}" class="btn-secondary">Export to XML</a>-->
+<!--    </div>-->
+
+    <div class="card">
+      <h2>Vocabulary List</h2>
+      <table class="enrollment-table">
+        <thead>
+        <tr>
+          <th>Term</th>
+          <th>IPA</th>
+          <th>Definition</th>
+          <th>Example</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(vocabularies)}">
+          <td colspan="4" style="text-align: center;">No vocabulary found.</td>
+        </tr>
+        <tr th:each="vocab : ${vocabularies}">
+          <td th:text="${vocab.term}"></td>
+          <td th:text="${vocab.ipa}"></td>
+          <td th:text="${vocab.definition}"></td>
+          <td th:text="${vocab.example}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

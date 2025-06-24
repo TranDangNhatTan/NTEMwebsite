@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="chat-widget" th:if="${#authentication.principal != 'anonymousUser'}">
+  <button id="chat-toggle-button" class="chat-toggle-button">💬</button>
+
+  <div id="chat-popup" class="chat-popup">
+    <div class="chat-header">
+      Support Chat
+    </div>
+    <div class="chat-area">
+      <div id="user-list-panel" class="user-list-panel">
+        <input type="text" id="user-search-input" placeholder="Search for users...">
+        <ul id="user-list">
+        </ul>
+      </div>
+      <div id="conversation-panel" class="conversation-panel">
+        <div id="conversation-header">
+          <span id="back-to-users" title="Back to user list">⬅️</span>
+          <span id="conversation-header-name"></span>
+        </div>
+        <div id="message-area">
+        </div>
+        <form id="message-form">
+          <input id="message-input" autocomplete="off" placeholder="Type a message..."/>
+          <button id="send-button" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

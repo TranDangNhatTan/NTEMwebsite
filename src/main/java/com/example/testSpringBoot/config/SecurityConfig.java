@@ -1,19 +1,29 @@
 package com.example.testSpringBoot.config;
 
+import com.example.testSpringBoot.config.handlers.CustomAuthenticationFailureHandler;
+import com.example.testSpringBoot.config.handlers.CustomAuthenticationSuccessHandler;
 import com.example.testSpringBoot.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private CustomAuthenticationSuccessHandler authenticationSuccessHandler; // Tiêm handler thành công
+
+    @Autowired
+    private CustomAuthenticationFailureHandler authenticationFailureHandler; // Tiêm handler thất bại
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -21,36 +31,36 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsServiceImpl userDetailsService) throws Exception {
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/register", "/login", "/index", "/events", "/achievements", "/about", "/css/**", "/images/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/my-courses", "/api/lessons/**", "/Uploads/lessons/**", "/resources/material/**").authenticated()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/css/**", "/images/**", "/js/**", "/vendor/**").permitAll()
+                        .requestMatchers("/", "/index", "/register", "/courses", "/events", "/achievements").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")
-                        .usernameParameter("username")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/index", true)
-                        .failureUrl("/login?error")
+                        // .defaultSuccessUrl("/index", true) // Bỏ dòng này
+                        // .failureUrl("/login?error=true") // Bỏ dòng này
+                        .successHandler(authenticationSuccessHandler) // <-- SỬ DỤNG HANDLER MỚI
+                        .failureHandler(authenticationFailureHandler) // <-- SỬ DỤNG HANDLER MỚI
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("/perform_logout")
                         .logoutSuccessUrl("/login")
-                        .permitAll()
-                )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(
-                                new AntPathRequestMatcher("/api/**"),
-                                new AntPathRequestMatcher("/resources/**")
-                        )
-                )
-                .userDetailsService(userDetailsService);
+                        .permitAll());
+
         return http.build();
     }
 }
