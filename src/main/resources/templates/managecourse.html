@@ -4,7 +4,6 @@
   <title>Manage Courses - NTEM Admin</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/admin.css}" />
 </head>
@@ -12,12 +11,10 @@
 
 <div class="container-fluid">
   <div class="row min-vh-100">
-    <!-- Sidebar -->
     <nav class="col-md-2 d-none d-md-block bg-white border-end sidebar py-4">
       <div th:replace="~{fragments/sidebar :: sidebar(activePage='courses')}"></div>
     </nav>
 
-    <!-- Main Content -->
     <main class="col-md-10 ms-sm-auto px-md-4">
       <header class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
         <h1 class="h3 mb-0">Manage Courses</h1>
@@ -52,7 +49,6 @@
               </div>
               <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Add Course</button>
-                <button type="button" class="btn btn-danger" th:onclick="'window.location.href=\'/admin/delete-managecourse\''">Delete Course</button>
               </div>
             </form>
           </div>
@@ -68,8 +64,7 @@
                   <th>Description</th>
                   <th>Status</th>
                   <th>Teacher</th>
-                  <th>Action</th>
-                </tr>
+                  <th>Actions</th> </tr>
                 </thead>
                 <tbody>
                 <tr th:each="course : ${courses}">
@@ -78,6 +73,7 @@
                   <td th:text="${course.status}"></td>
                   <td th:text="${course.teacherId}"></td>
                   <td>
+                    <a th:href="@{/admin/courses/{id}/export-members(id=${course.courseId})}" class="btn btn-success btn-sm">Export Members</a>
                     <button class="btn btn-danger btn-sm" th:onclick="'window.location.href=\'/admin/delete-managecourse?courseId=' + ${course.courseId}\'">Delete</button>
                   </td>
                 </tr>
@@ -91,17 +87,6 @@
   </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  function toggleMenu() {
-    var menu = document.getElementById("avatarMenu");
-    if (menu.style.display === "block") {
-      menu.style.display = "none";
-    } else {
-      menu.style.display = "block";
-    }
-  }
-</script>
 </body>
 </html>

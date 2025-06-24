@@ -1,15 +1,18 @@
 package com.example.testSpringBoot.controller;
 
-import com.example.testSpringBoot.service.LoginLogService; // Thêm import
+import com.example.testSpringBoot.service.ExcelExportService;
+import com.example.testSpringBoot.service.LoginLogService;
 import com.example.testSpringBoot.service.VocabularyService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -21,7 +24,10 @@ public class AdminController {
     private VocabularyService vocabularyService;
 
     @Autowired
-    private LoginLogService loginLogService; // Thêm service mới
+    private LoginLogService loginLogService;
+
+    @Autowired
+    private ExcelExportService excelExportService; // TIÊM SERVICE EXCEL VÀO
 
     @GetMapping("/vocabulary")
     public String showManageVocabularyPage(Model model) {
@@ -29,11 +35,10 @@ public class AdminController {
         return "manage-vocabulary";
     }
 
-    // THÊM PHƯƠNG THỨC MỚI
     @GetMapping("/login-logs")
     public String showLoginLogsPage(Model model) {
         model.addAttribute("loginLogs", loginLogService.findAll());
-        return "login-logs"; // Tên của file view HTML mới
+        return "login-logs";
     }
 
     @PostMapping("/vocabulary/import")
@@ -65,5 +70,19 @@ public class AdminController {
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi khi tạo file XML: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/courses/{courseId}/export-members")
+    public void exportCourseMembers(@PathVariable Integer courseId, HttpServletResponse response) throws IOException {
+        String filename = "members_course_" + courseId + ".xlsx";
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+
+        ByteArrayInputStream stream = excelExportService.exportMembersToExcel(courseId);
+
+        // Sử dụng hàm có sẵn của Java, không cần thêm thư viện ngoài
+        stream.transferTo(response.getOutputStream());
+
+        response.flushBuffer();
     }
 }
