@@ -3,6 +3,7 @@
 <head>
   <title>NTEM English Learning - Courses</title>
   <link rel="stylesheet" th:href="@{/css/home.css}" />
+  <link rel="stylesheet" th:href="@{/css/chat.css}"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
@@ -32,9 +33,9 @@
   </nav>
   <div class="avatar-section" onclick="toggleMenu()">
     <span th:text="${fullName != null ? fullName : ''}" th:unless="${fullName == null}"></span>
-    <th:block th:if="${isAdmin}">
-      <a th:href="@{/admin}" class="admin-btn">Admin</a>
-    </th:block>
+<!--    <th:block th:if="${isAdmin}">-->
+<!--      <a th:href="@{/admin}" class="admin-btn">Admin</a>-->
+<!--    </th:block>-->
     <i class="fas fa-user-circle"></i>
     <div class="avatar-menu" id="avatarMenu">
       <a th:href="@{/login}" th:class="${currentPage == '/login'} ? 'active' : ''">Login</a>
@@ -57,7 +58,7 @@
     <h2>Available Courses</h2>
     <div class="course-items">
       <div th:each="course : ${courses}" class="course-item">
-        <img src="/images/course1.jpg" alt="Course" th:src="'/images/course' + ${course.courseId} + '.jpg'">
+<!--        <img src="/images/course1.jpg" alt="Course" th:src="'/images/course' + ${course.courseId} + '.jpg'">-->
         <h3 th:text="${course.title}">Course Title</h3>
         <p th:text="${course.description}">Course Description</p>
         <form th:action="@{/register-course}" th:method="post" onsubmit="console.log('Form submitted for courseId: ' + ${course.courseId});">
@@ -70,20 +71,13 @@
   </section>
 </main>
 
-<footer>
-  <div class="footer-content">
-    <div class="footer-section">
-      <h3>Contact Us</h3>
-      <p>Email: [email@gmail.com]</p>
-      <p>Phone: +84 123 456 789</p>
-    </div>
-    <div class="footer-section">
-      <h3>Follow Us</h3>
-      <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
-    </div>
-  </div>
-  <p class="footer-note">© 2025 NTEM English Learning. All rights reserved.</p>
-</footer>
+<div th:replace="~{fragments/footer :: page-footer}"></div>
+
+<div th:replace="~{fragments/chat-widget :: chat-widget}"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script th:src="@{/js/chat.js}"></script>
 
 <script>
   function toggleMenu() {

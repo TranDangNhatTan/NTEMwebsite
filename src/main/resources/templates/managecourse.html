@@ -4,76 +4,95 @@
   <title>Manage Courses - NTEM Admin</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/admin.css}" />
 </head>
-<body>
+<body class="bg-light">
 
-<div th:replace="~{fragments/sidebar :: sidebar(activePage='courses')}"></div>
+<div class="container-fluid">
+  <div class="row min-vh-100">
+    <!-- Sidebar -->
+    <nav class="col-md-2 d-none d-md-block bg-white border-end sidebar py-4">
+      <div th:replace="~{fragments/sidebar :: sidebar(activePage='courses')}"></div>
+    </nav>
 
-<div class="main-content">
-  <header class="main-header">
-    <h1>Manage Courses</h1>
-    <div class="user-info">
-      <span th:text="'Last Login: ' + ${lastLogin != null ? lastLogin : 'N/A'}"></span>
-    </div>
-  </header>
+    <!-- Main Content -->
+    <main class="col-md-10 ms-sm-auto px-md-4">
+      <header class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
+        <h1 class="h3 mb-0">Manage Courses</h1>
+        <div class="user-info text-end">
+          <span class="text-muted" th:text="'Last Login: ' + ${lastLogin != null ? lastLogin : 'N/A'}"></span>
+        </div>
+      </header>
 
-  <div class="dashboard">
-    <div class="card">
-      <form th:action="@{/admin/add-managecourse}" method="post" class="admin-form">
-        <div class="form-group">
-          <label for="courseTitle">Course Title</label>
-          <input type="text" id="courseTitle" name="title" placeholder="Enter course title" required>
+      <div class="dashboard">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h2 class="card-title">Add New Course</h2>
+            <form th:action="@{/admin/add-managecourse}" method="post">
+              <div class="mb-3">
+                <label for="courseTitle" class="form-label">Course Title</label>
+                <input type="text" id="courseTitle" name="title" class="form-control" placeholder="Enter course title" required>
+              </div>
+              <div class="mb-3">
+                <label for="courseDescription" class="form-label">Description</label>
+                <textarea id="courseDescription" name="description" class="form-control" placeholder="Enter course description" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="courseStatus" class="form-label">Status</label>
+                <select id="courseStatus" name="status" class="form-select" required>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="teacherId" class="form-label">Teacher ID</label>
+                <input type="number" id="teacherId" name="teacherId" class="form-control" placeholder="Enter teacher ID" required>
+              </div>
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Add Course</button>
+                <button type="button" class="btn btn-danger" th:onclick="'window.location.href=\'/admin/delete-managecourse\''">Delete Course</button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="courseDescription">Description</label>
-          <textarea id="courseDescription" name="description" placeholder="Enter course description" required></textarea>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h2 class="card-title">Existing Courses</h2>
+            <div class="table-responsive">
+              <table class="table table-striped align-middle">
+                <thead class="table-light">
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Teacher</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="course : ${courses}">
+                  <td th:text="${course.title}"></td>
+                  <td th:text="${course.description}"></td>
+                  <td th:text="${course.status}"></td>
+                  <td th:text="${course.teacherId}"></td>
+                  <td>
+                    <button class="btn btn-danger btn-sm" th:onclick="'window.location.href=\'/admin/delete-managecourse?courseId=' + ${course.courseId}\'">Delete</button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="courseStatus">Status</label>
-          <select id="courseStatus" name="status" required>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="teacherId">Teacher ID</label>
-          <input type="number" id="teacherId" name="teacherId" placeholder="Enter teacher ID" required>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">Add Course</button>
-          <button type="button" class="btn-secondary" th:onclick="'window.location.href=\'/admin/delete-managecourse\''">Delete Course</button>
-        </div>
-      </form>
-    </div>
-    <div class="card">
-      <h2>Existing Courses</h2>
-      <table class="course-table">
-        <thead>
-        <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Status</th>
-          <th>Teacher</th>
-          <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="course : ${courses}">
-          <td th:text="${course.title}"></td>
-          <td th:text="${course.description}"></td>
-          <td th:text="${course.status}"></td>
-          <td th:text="${course.teacherId}"></td>
-          <td>
-            <button class="btn-secondary" th:onclick="'window.location.href=\'/admin/delete-managecourse?courseId=' + ${course.courseId}\'">Delete</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+      </div>
+    </main>
   </div>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   function toggleMenu() {
     var menu = document.getElementById("avatarMenu");

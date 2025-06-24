@@ -4,29 +4,43 @@
   <title>Admin Dashboard - NTEM English Learning</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/admin.css}" />
 </head>
-<body>
+<body class="bg-light">
 
-<div th:replace="~{fragments/sidebar :: sidebar(activePage='dashboard')}"></div>
+<div class="container-fluid">
+  <div class="row min-vh-100">
+    <!-- Sidebar -->
+    <nav class="col-md-2 d-none d-md-block bg-white border-end sidebar py-4">
+      <div th:replace="~{fragments/sidebar :: sidebar(activePage='dashboard')}"></div>
+    </nav>
 
-<div class="main-content">
-  <header class="main-header">
-    <h1>Welcome, <span th:text="${fullName}"></span></h1>
-    <div class="user-info">
-      <span th:text="'Last Login: ' + ${lastLogin != null ? lastLogin : 'N/A'}"></span>
-    </div>
-  </header>
+    <!-- Main Content -->
+    <main class="col-md-10 ms-sm-auto px-md-4">
+      <header class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
+        <h1 class="h3 mb-0">Welcome, <span th:text="${fullName}"></span></h1>
+        <div class="user-info text-end">
+          <span class="text-muted" th:text="'Last Login: ' + ${lastLogin != null ? lastLogin : 'N/A'}"></span>
+        </div>
+      </header>
 
-  <div class="dashboard">
-    <div class="welcome-card">
-      <h2>Admin Dashboard</h2>
-      <p>Welcome to the NTEM English Learning Admin Panel! Use the sidebar to manage courses, lessons, enrollments, and resources. Start by selecting an option from the menu.</p>
-      <p class="notification" th:if="${message}" th:text="${message}"></p>
-    </div>
+      <div class="dashboard">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h2 class="card-title">Admin Dashboard</h2>
+            <p class="card-text">Welcome to the NTEM English Learning Admin Panel! Use the sidebar to manage courses, lessons, enrollments, and resources. Start by selecting an option from the menu.</p>
+            <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   function toggleMenu() {
     var menu = document.getElementById("avatarMenu");
